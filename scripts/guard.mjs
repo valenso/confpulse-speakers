@@ -6,9 +6,11 @@ import { appendFileSync, readFileSync } from 'node:fs';
 import { ownerLineFor, parseCodeowners, validateSpeaker } from './lib.mjs';
 
 const { GITHUB_TOKEN: token, GITHUB_REPOSITORY: repo, PR_NUMBER: number, GITHUB_OUTPUT: outputFile } = process.env;
+// Actions sets this; the tests point it at a local stand-in for the API.
+const apiBase = process.env.GITHUB_API_URL ?? 'https://api.github.com';
 
 async function api(path, { raw = false } = {}) {
-  const response = await fetch(`https://api.github.com${path}`, {
+  const response = await fetch(`${apiBase}${path}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: raw ? 'application/vnd.github.raw+json' : 'application/vnd.github+json',
