@@ -2,17 +2,27 @@
 
 Public speaker profiles for the [ConfPulse](https://github.com/valenso/ConfPulse) app. Each speaker keeps one file, and only they can change it.
 
-## Add or update your profile
+## Claim your profile
+
+A profile is yours once it is **claimed**: your GitHub login is its id, and only you can change it. There are two ways to get there.
+
+**Your name is already in [`speakers/`](speakers/).** It was created from a conference programme, as an [unclaimed profile](#unclaimed-profiles). [Open an issue](https://github.com/valenso/confpulse-speakers/issues/new) with your GitHub login. A maintainer renames the file to your login, keeps the old id in `cp:aliases` so sessions that name the old id still find you, and adds your CODEOWNERS line.
+
+**There is no profile for you yet.** Claim your id by creating the profile:
 
 1. Fork this repo.
-2. Copy [`examples/janedoe.json`](examples/janedoe.json) to `speakers/<your-github-login>.json`, **lowercase**, and edit it. Editing an existing file works the same way.
-3. If it is a new profile, also add one line to `.github/CODEOWNERS`:
+2. Copy [`examples/janedoe.json`](examples/janedoe.json) to `speakers/<your-github-login>.json`, **lowercase**, and fill it in.
+3. Add one line to `.github/CODEOWNERS`:
    ```
    /speakers/<your-github-login>.json  @<your-github-login>
    ```
-4. Open a pull request. Edits to your own existing profile merge automatically once the `guard` check passes. A new profile waits for one review from the maintainer.
+4. Open a pull request. It waits for one review from the maintainer.
 
 The file name is your id. It must be your GitHub login in lowercase, the same string as `identifier` inside the file, and the PR has to come from that account.
+
+## Update your profile
+
+Once it is claimed, fork the repo, edit your file and open a pull request. Edits to your own profile merge automatically once the `guard` check passes.
 
 ## Profile format
 
@@ -42,9 +52,7 @@ A speaker found in a conference programme with no profile here gets one made for
 
 The published index marks such a profile `"cp:claimed": false`, and the app then shows no GitHub photo or link for it, since the slug could belong to an unrelated GitHub account. A profile is claimed once CODEOWNERS gives its file to the speaker's own login.
 
-### Claiming a profile
-
-If it is you, [open an issue](https://github.com/valenso/confpulse-speakers/issues/new) with your GitHub login. A maintainer renames the file to your login, keeps the old id in `cp:aliases` so sessions that name the old id still find you, and adds your CODEOWNERS line. From then on the profile is yours to edit.
+To take one over, see [Claim your profile](#claim-your-profile).
 
 ## How access works
 
