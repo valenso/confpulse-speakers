@@ -60,6 +60,6 @@ A maintainer renames the file, updates `identifier` and the CODEOWNERS line, and
 ## Development
 
 ```
-node --test tests/
+node --test tests/lib.test.mjs tests/guard.test.mjs
 node scripts/build-index.mjs _site
 ```
