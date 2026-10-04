@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { test } from 'node:test';
-import { isId, ownerLineFor, parseCodeowners, validateSpeaker } from '../scripts/lib.mjs';
+import { claimedIds, idFromName, isId, ownerLineFor, parseCodeowners, validateSpeaker } from '../scripts/lib.mjs';
 
 const example = () => JSON.parse(readFileSync(new URL('../examples/janedoe.json', import.meta.url), 'utf8'));
 
@@ -49,4 +49,26 @@ test('CODEOWNERS parsing', () => {
   const { maintainer, owners } = parseCodeowners(`# c\n*  @Valenso\n${ownerLineFor('janedoe')}\n/other.md @x\n`);
   assert.equal(maintainer, 'valenso');
   assert.deepEqual([...owners], [['janedoe', 'janedoe']]);
+});
+
+test('cp:claimed cannot be set by a speaker either', () => {
+  assert.match(validateSpeaker({ ...example(), 'cp:claimed': true }, 'janedoe').join(), /cp:claimed/);
+});
+
+test('ids from names are lowercase ASCII slugs', () => {
+  assert.equal(idFromName('Luca Trușcă'), 'luca-trusca');
+  assert.equal(idFromName('André Alves'), 'andre-alves');
+  assert.equal(idFromName("  Domagoj  Marić "), 'domagoj-maric');
+  assert.equal(idFromName('Falk Woldmann Lu'), 'falk-woldmann-lu');
+  assert.ok(isId(idFromName('Ohans Emmanuel')));
+});
+
+test('a long name is cut at a word, within 39 characters', () => {
+  const id = idFromName('Maximilian Alexander Wolfgang Friedrich von Habsburg-Lothringen');
+  assert.ok(id.length <= 39 && isId(id), id);
+});
+
+test('a profile is claimed only when CODEOWNERS gives it to the speaker themselves', () => {
+  const text = '* @valenso\n/speakers/janedoe.json @janedoe\n/speakers/johnsmith.json @someone-else\n';
+  assert.deepEqual([...claimedIds(text)], ['janedoe']);
 });
