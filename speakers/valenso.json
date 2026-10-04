@@ -1,0 +1,15 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "identifier": "valenso",
+  "name": "Valentin R",
+  "jobTitle": "Head of Engineering",
+  "description": "Writes Shift Signal, a newsletter on engineering leadership: hiring, team structure and career transitions.",
+  "worksFor": { "@type": "Organization", "name": "Urban Sports Club" },
+  "sameAs": [
+    "https://github.com/valenso",
+    "https://x.com/ValentinDrives"
+  ],
+  "cp:newsletter": { "platform": "substack", "url": "https://shiftsignal.substack.com" },
+  "cp:githubId": 2651963
+}
