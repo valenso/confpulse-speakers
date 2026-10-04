@@ -36,6 +36,16 @@ A [schema.org `Person`](https://schema.org/Person):
 
 All links must be `https`. `cp:verified` is added by the publisher and cannot be set in your file.
 
+## Unclaimed profiles
+
+A speaker found in a conference programme with no profile here gets one made for them, so their sessions can name them: `node scripts/add-speaker.mjs "Full Name"` writes `speakers/<name-slug>.json` with just the name (and optionally `--title` / `--company`, only when the official site says so). Its id is a slug of the name, **not a GitHub login**, because the login is not known. Nothing else is filled in.
+
+The published index marks such a profile `"cp:claimed": false`, and the app then shows no GitHub photo or link for it, since the slug could belong to an unrelated GitHub account. A profile is claimed once CODEOWNERS gives its file to the speaker's own login.
+
+### Claiming a profile
+
+If it is you, [open an issue](https://github.com/valenso/confpulse-speakers/issues/new) with your GitHub login. A maintainer renames the file to your login, keeps the old id in `cp:aliases` so sessions that name the old id still find you, and adds your CODEOWNERS line. From then on the profile is yours to edit.
+
 ## How access works
 
 - `.github/CODEOWNERS` lists the owner of every profile, and the maintainer owns everything else.

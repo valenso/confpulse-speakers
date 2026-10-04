@@ -18,7 +18,7 @@ const isHttpsUrl = (value) => {
 const isText = (value, max) => typeof value === 'string' && value.trim().length > 0 && value.length <= max;
 
 /** Keys a speaker may never set: the publish job adds them to the index. */
-const RESERVED_KEYS = ['cp:verified'];
+const RESERVED_KEYS = ['cp:verified', 'cp:claimed'];
 
 /**
  * Checks one speaker file, a schema.org `Person`. Returns a list of problems, empty when valid.
@@ -108,3 +108,23 @@ export function parseCodeowners(text) {
 
 /** The one CODEOWNERS line a speaker may add for their own profile. */
 export const ownerLineFor = (login) => `/speakers/${login}.json @${login}`;
+
+/**
+ * The id a new profile gets from a name, for a speaker whose GitHub login is not known:
+ * "Luca Trușcă" -> "luca-trusca". Lowercase ASCII, single hyphens, at most 39 characters.
+ */
+export function idFromName(name) {
+  const id = name
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  return id.length <= 39 ? id : id.slice(0, 39).replace(/-[^-]*$/, '');
+}
+
+/** Ids of profiles their own speaker has claimed: the ones CODEOWNERS gives to that same login. */
+export function claimedIds(codeownersText) {
+  const { owners } = parseCodeowners(codeownersText);
+  return new Set([...owners].filter(([id, owner]) => id === owner).map(([id]) => id));
+}

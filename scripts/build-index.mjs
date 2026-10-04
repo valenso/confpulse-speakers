@@ -3,9 +3,14 @@
 // Adds `cp:verified` to a profile whose file was first added by a commit authored by the
 // matching GitHub login, i.e. the speaker onboarded themselves. The flag exists only in the
 // published index, so a speaker cannot set it from their own file.
+//
+// Adds `cp:claimed` to every profile: true when CODEOWNERS gives the file to the speaker whose
+// GitHub login is its id. An unclaimed profile was created from a conference programme for a
+// speaker whose login is not known, so its id is only a slug of their name and the app must not
+// treat it as a GitHub account (no GitHub avatar, no GitHub link).
 import { execFileSync } from 'node:child_process';
 import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs';
-import { isId, validateSpeaker } from './lib.mjs';
+import { claimedIds, isId, validateSpeaker } from './lib.mjs';
 
 const { GITHUB_TOKEN: token, GITHUB_REPOSITORY: repo } = process.env;
 const outDir = process.argv[2] ?? '_site';
@@ -24,6 +29,7 @@ function addingCommit(file) {
   return output.trim().split('\n').filter(Boolean).pop() ?? null;
 }
 
+const claimed = claimedIds(readFileSync('.github/CODEOWNERS', 'utf8'));
 const graph = [];
 const errors = [];
 for (const name of readdirSync('speakers').filter((entry) => entry.endsWith('.json')).sort()) {
@@ -49,7 +55,7 @@ for (const name of readdirSync('speakers').filter((entry) => entry.endsWith('.js
   const sha = addingCommit(file);
   const verified = sha !== null && (await commitAuthorLogin(sha)) === id;
   const { '@context': _context, ...person } = doc;
-  graph.push(verified ? { ...person, 'cp:verified': true } : person);
+  graph.push({ ...person, 'cp:claimed': claimed.has(id), ...(verified ? { 'cp:verified': true } : {}) });
 }
 
 if (errors.length > 0) {
