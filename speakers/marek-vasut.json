@@ -1,0 +1,6 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "identifier": "marek-vasut",
+  "name": "Marek Vasut"
+}
