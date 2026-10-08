@@ -1,0 +1,6 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "identifier": "mathieu-desnoyers",
+  "name": "Mathieu Desnoyers"
+}

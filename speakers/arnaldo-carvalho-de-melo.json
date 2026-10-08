@@ -1,0 +1,6 @@
+{
+  "@context": "https://schema.org",
+  "@type": "Person",
+  "identifier": "arnaldo-carvalho-de-melo",
+  "name": "Arnaldo Carvalho de Melo"
+}
